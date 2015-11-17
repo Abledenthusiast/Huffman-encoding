@@ -10,6 +10,7 @@
 //   ported to C++ by Owen Astrachan 3/27/94
 //   modified to use <string> by Gary Lewandowski, 14 April 1999
 #include <iostream>
+#include <vector>
 #include "bitops.h"
 using namespace std;
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <stdlib.h>
 #include "bitops.h"
 using namespace std;
@@ -25,7 +26,6 @@ void echo(ibstream & input)
    output.close();
 }
 
-
 int main(int argc, char * argv[])
 {
    ibstream infile;
@@ -46,3 +46,5 @@ int main(int argc, char * argv[])
 
    return 0;
 }
+
+
