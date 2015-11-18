@@ -28,6 +28,35 @@ vector<int> charFreq(string fileName)
    return count;
 }
 
+HeapNode buildTree(priority_queue<HeapNode> leafNodes)
+{ 
+
+  priority_queue<HeapNode> myHeap = leafNodes;
+  while (myHeap.size()>1)
+    {
+      HeapNode firstNode = myHeap.top();
+      myHeap.pop();
+      HeapNode secondNode = myHeap.top();
+      myHeap.pop();
+
+      cout << "sub tree left weight: "<< firstNode.value()->Weight() << endl;
+      cout << "sub tree right weight: "<< secondNode.value()->Weight() << endl;
+
+      cout << "sub tree left value: "<< firstNode.value()->Value() << endl;
+      cout << "sub tree right value: "<< secondNode.value()->Value() << endl;
+      
+      HeapNode parent;
+      parent.buildNode(firstNode.value(), secondNode.value());
+
+      
+      cout << "parent weight: " << parent.value()->Weight() << endl;
+      cout << "" << endl;
+
+      myHeap.push(parent);
+    } 
+   return myHeap.top();
+}
+
 int main(int argc, char * argv[])
 {
    vector<int> freq;
@@ -44,40 +73,20 @@ int main(int argc, char * argv[])
    
 
    priority_queue<HeapNode> myHeap;
-   HeapNode insertVal;
-
-   
-
-   for(int i = 0; i < 256; i++)
+   HeapNode insertVal; 
+   // only insert ascii codes that actually appear
+   for(int i = 0; i < 257; i++)
     {
       if(freq[i]!=0)
       {
-         cout << freq[i] << " i: " << i << endl;
+        
          insertVal.buildLeaf(freq[i], i);
          myHeap.push(insertVal);
       }
-
     }
-    cout << "" << endl;
-  while (myHeap.size()>1)
-    {
-      HeapNode firstNode= myHeap.top();
-      myHeap.pop();
-      HeapNode secondNode = myHeap.top();
-      myHeap.pop();
-
-      cout << firstNode.value()->Weight() << endl;
-      cout << secondNode.value()->Weight() << endl;
-
-      
-      HeapNode parent;
-      parent.buildNode(firstNode.value(), secondNode.value());
-
-      
-      cout << "parent weight: " << parent.value()->Weight() << endl;
-      cout << "" << endl;
-
-      myHeap.push(parent);
-    } 
+    HeapNode HuffmanTree = buildTree(myHeap);
+    //string encoding;
+    HuffmanTree.value()->traverseTree(HuffmanTree.value(), "");
+    
     return 0;
 }

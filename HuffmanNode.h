@@ -57,5 +57,30 @@ public:
 		return rightChild;
 	}
 
+	void traverseTree(HuffmanNode* node, string encoding)
+	{
+		//cout << encoding << endl;
+		if(node->left()== NULL && node->right() == NULL)
+		{
+			cout << "leaf ascii value: " << node->Value() << " Path: " << encoding << endl;
+			
+			return;
+			//return encoding;
+		}
+		if(node->left()!= NULL)
+		{
+			
+			traverseTree(node->leftChild, encoding+'0');
+			
+		}
+		if(node->right() != NULL)
+		{
+		
+			traverseTree(node->rightChild, encoding+'1');
+			
+		}
+				
+	}
+
 };
 #endif
