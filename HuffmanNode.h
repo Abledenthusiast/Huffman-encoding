@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 
 
 /**
@@ -57,29 +58,33 @@ public:
 		return rightChild;
 	}
 
-	void traverseTree(HuffmanNode* node, string encoding)
+	void traverseTree(HuffmanNode* node, string path, vector<string>& encodings)
 	{
 		//cout << encoding << endl;
 		if(node->left()== NULL && node->right() == NULL)
 		{
-			cout << "leaf ascii value: " << node->Value() << " Path: " << encoding << endl;
-			
-			return;
-			//return encoding;
+			char ch = (char)node->value;
+			//the following is for formatting's sake
+			if(node->value==10)
+			{
+				cout << "leaf ascii value: " << node->value << "(/n) Path: ";
+			}
+			else{
+				cout << "leaf ascii value: " << node->value << '('<<ch<<')' << " Path: ";
+			}			 
+			cout<< path << endl;
+
+			encodings[node->Value()] = path;
 		}
 		if(node->left()!= NULL)
 		{
-			
-			traverseTree(node->leftChild, encoding+'0');
-			
+			traverseTree(node->leftChild, path+'0', encodings);	
 		}
 		if(node->right() != NULL)
-		{
-		
-			traverseTree(node->rightChild, encoding+'1');
-			
+		{	
+			traverseTree(node->rightChild, path+'1', encodings);			
 		}
-				
+		return;		
 	}
 
 };
