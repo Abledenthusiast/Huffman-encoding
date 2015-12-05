@@ -19,7 +19,7 @@
    using namespace std;
 
    int const PSEUDOEOF = 256;
-   string charCount;
+   int charCount;
    string result;
    vector<string> encodings (257);
    /*
@@ -52,11 +52,11 @@
          if(count[i]!=0)
          {
             numOfAscii = numOfAscii + 1;
-            charCount = to_string(numOfAscii);
+            charCount = numOfAscii;
             result = result + (char)i + to_string(count[i])+ " ";
          }
        }
-      
+      // return the vector sorted by characters with their frequencies
       return count;
    }
 
@@ -65,7 +65,12 @@
       //------- Read each character again -------- 
          
          ifstream infile;
+         obstream output;
+
+         output.open(outFile);
+         
          infile.open(fileName.c_str());
+        // output.writebits(8, charCount);
          /** while peeking ahead does not reveal end of file **/
          while(infile.peek() && !infile.eof())
          {
@@ -73,20 +78,15 @@
             char ch = infile.get();
             if(encodings[ch]!="")
             {
-              result = result + encodings[ch]; 
+              int bitSize = encodings[ch].length();
+              int writeBits = stoi(encodings[ch]);
+              output.writebits(bitSize,writeBits); 
             }                      
-         } 
-
-      //   cout << "Compressed result: " << result << endl;
-
-      ofstream out(outFile);
+         }     
       /*
       * READ: procede the final result with the final charCount
-      */
-      result = charCount + " " + result;
-      // write the result
-      out << result;
-      out.close();
+      */     
+      output.close();
    }
 
    HeapNode buildTree(priority_queue<HeapNode> leafNodes)
@@ -131,7 +131,7 @@
          cerr << "usage: " << argv[0] << " <filename>" << endl;
          exit(1);
       }
-
+      
       priority_queue<HeapNode> myHeap;
       HeapNode insertVal; 
       // only insert ascii codes that actually appear
