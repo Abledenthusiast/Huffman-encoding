@@ -65,27 +65,39 @@
    */
    void readIn(string fileName)
    {
-      ifstream infile;
+      ibstream infile(fileName);
       
-      infile.open(fileName.c_str());
       // init 
       priority_queue<HeapNode> myHeap;
       HeapNode insertVal; 
-       char ch;      
-       int frequency;
+      int inbits;      
+      int frequency;
+      char ch;
        // set up the loop for n number of characters
-      int loopTime = infile.get();
-      // convert char to int
-      loopTime = loopTime - '0';
+      int loopTime;
+      infile.readbits(8,inbits);
+      // convert char(inbits) to int(loopTime)
+      loopTime = inbits - '0';
 
        // set up leaf values for huffman tree
       while(loopTime>0)
       {
-        ch = infile.get();
-        // how often my character appears
-        infile >> frequency; 
+        // get the unique characters        ch = infile.get();
+        infile.readbits(8,inbits);
+
+        ch = inbits;
+        cout << "test: " << ch << endl;
+        // frequency of that character
+        infile.readbits(8,inbits);
+        
+        frequency = inbits - '0';
+        cout << frequency << endl;
         // space after (char,freq) pair
-        infile.get(); 
+        infile.readbits(8,inbits);
+        // how often my character appears
+   //     infile >> frequency; 
+        // space after (char,freq) pair
+   //     infile.get(); 
         // create leaf with the character and it's frequency as the values
         insertVal.buildLeaf(frequency, ch);
         myHeap.push(insertVal);
@@ -105,19 +117,20 @@
       string output = "";
       // init currentNode to refer to the root
       currentNode = HuffmanTree.value();
-      while(infile.peek() && !infile.eof())
+      while (infile.readbits(1, inbits)) 
       {
-        ch = infile.get();    
+       // ch = infile.get();    
         // left on 0, right on 1
-        if(ch=='0')
+        cout << "bit read: " << inbits << endl;
+        if(inbits==0)
         {
-          cout << "I went left" << endl;
+          //cout << "I went left" << endl;
           currentNode = currentNode->left();
           if(currentNode->Value()!=-1)
           {
-            cout <<  "I'm an ascii value!" << endl;
+            //cout <<  "I'm an ascii value!" << endl;
             char temp = currentNode->Value();
-            cout << temp << endl;
+            cout << "char found at leaf: " << temp << endl;
             output.push_back(temp);
             // go back to the top
             currentNode = HuffmanTree.value();
@@ -125,14 +138,15 @@
         }
         else
         {
-          cout << "I went right" << endl;
+         // cout << "I went right" << endl;
           currentNode = currentNode->right();
           if(currentNode->Value()!=-1)
           {
-            cout <<  "I'm an ascii value!" << endl;
+           // cout <<  "I'm an ascii value!" << endl;
             
             char temp = currentNode->Value();
             output.push_back(temp);
+            cout << "char found at leaf: " << temp << endl;
             // go back to the top
             currentNode = HuffmanTree.value();
           }

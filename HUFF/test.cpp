@@ -1,4 +1,5 @@
    #include <iostream>
+   #include <bitset>
    #include <string>
    #include <vector>
    #include <map>
@@ -60,15 +61,26 @@
       return count;
    }
 
-   void writeFile(string fileName, string outFile)
+  /*
+  * writeFile writes the encoding out to a new compressed file
+  *  pass in a fileName to open & a name for a file to output to
+  */
+  void writeFile(string fileName, string outFile)
    {
-      //------- Read each character again -------- 
-         
+      //------- Read each character again --------         
          ifstream infile;
-         obstream output;
+         obstream output(outFile);
 
-         output.open(outFile);
-         
+        
+         // write the number of characters
+         output.writebits(8,charCount+'0');
+         // write the table of unique characters and their frequency
+         for(int i = 0; i < result.length(); i++)
+        {
+          // each character is 8 bits long
+          output.writebits(8,result[i]);
+        }
+
          infile.open(fileName.c_str());
         // output.writebits(8, charCount);
          /** while peeking ahead does not reveal end of file **/
@@ -77,10 +89,10 @@
             // get the encoding value for each character and add to the final output
             char ch = infile.get();
             if(encodings[ch]!="")
-            {
+            {              
               int bitSize = encodings[ch].length();
-              int writeBits = stoi(encodings[ch]);
-              output.writebits(bitSize,writeBits); 
+              int outBits = stoi(encodings[ch]);            
+              output.writebits(bitSize,outBits);
             }                      
          }     
       /*

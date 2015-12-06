@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <stdlib.h>
 #include "bitops.h"
 using namespace std;
@@ -18,13 +17,14 @@ void echo(ibstream & input)
    input.rewind();
    while (input.readbits(1, inbits)) 
      /* reads 1 bit, stores it as the rightmost value of inbits, so
-	inbits is now either 1 or 0 */
+   inbits is now either 1 or 0 */
    {
      output.writebits(1, inbits); // writes a single bit
    }
 
    output.close();
 }
+
 
 int main(int argc, char * argv[])
 {
@@ -46,5 +46,3 @@ int main(int argc, char * argv[])
 
    return 0;
 }
-
-
