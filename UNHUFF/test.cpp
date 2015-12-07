@@ -101,7 +101,7 @@
        */
         loopTime--;
       }
-      // insert leaf of PSEUDOEOF
+       //insert leaf of PSEUDOEOF
       insertVal.buildLeaf(1, PSEUDOEOF);
       myHeap.push(insertVal);
       // create the huffman tree
@@ -114,10 +114,17 @@
       string output = "";
       // init currentNode to refer to the root
       currentNode = HuffmanTree.value();
-      while (infile.readbits(1, inbits)) 
+      bool traversing = true;
+      while (infile.readbits(1,inbits)&&traversing) 
       {   
+
         // left on 0, right on 1
         cout << "bit read: " << inbits << endl;
+        // end of file
+        if(currentNode->Value()==PSEUDOEOF)
+        {
+          traversing = false;
+        }
         if(inbits==0)
         {
           //cout << "I went left" << endl;

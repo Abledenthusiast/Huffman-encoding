@@ -87,7 +87,8 @@
 
         
          // write the number of characters
-         output.writebits(32,charCount);
+        
+         output.writebits(32,charCount+1);
          // write the table of unique characters and their frequency
         for(int i = 0; i < 257; i++)
         {
@@ -108,10 +109,14 @@
             if(encodings[ch]!="")
             {              
               int bitSize = encodings[ch].length();
-              int outBits = stoi(encodings[ch],nullptr,2);                   
+              int outBits = stoi(encodings[ch],nullptr,2);
+              cout << ch << "size: " << bitSize << " path as int: " << outBits << endl;                   
               output.writebits(bitSize,outBits);
             }                      
-         }     
+         }
+         int bitSize = encodings[PSEUDOEOF].length();
+        int outBits = stoi(encodings[PSEUDOEOF],nullptr,2);
+         output.writebits(bitSize,outBits);     
       // close the output file     
       output.close();
    }
