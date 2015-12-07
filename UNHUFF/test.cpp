@@ -52,15 +52,10 @@
        } 
       return myHeap.top();
    }
-   /*
-    this is a test area!
-   */
 
-  //------------------------------------------------------
-
-   /*
-   *  count the number of characters in a text file
-   *  
+  /*
+   *  function takes in a fileName to open and read in
+   *  decompresses the huffman encoded file
    */
    void readIn(string fileName)
    {
@@ -82,18 +77,17 @@
        // set up leaf values for huffman tree
       while(loopTime>0)
       {
-        // get the unique characters        ch = infile.get();
+        // get the unique characters        
         infile.readbits(8,ch);
         
-        cout << "test: " << ch << endl;
+        cout << "char: " << (char)ch << endl;
         // frequency of that character
         infile.readbits(32,frequency);
-        cout << frequency << endl;
+        cout <<"freq: "<< frequency << endl;
 
         insertVal.buildLeaf(frequency, ch);
         myHeap.push(insertVal);
         
-
         /* create leaf with the character and it's frequency as the values
         for(int i = 0; i < 257; i++)
        {
@@ -121,8 +115,7 @@
       // init currentNode to refer to the root
       currentNode = HuffmanTree.value();
       while (infile.readbits(1, inbits)) 
-      {
-       // ch = infile.get();    
+      {   
         // left on 0, right on 1
         cout << "bit read: " << inbits << endl;
         if(inbits==0)
@@ -138,7 +131,7 @@
             // go back to the top
             currentNode = HuffmanTree.value();
           }
-        }
+         }
         else
         {
          // cout << "I went right" << endl;

@@ -7,6 +7,7 @@
    #include "bitops.h"
    #include "HeapNode.h"
    #include "HuffmanNode.h"
+   #include <cmath>
 
 
 /*
@@ -21,7 +22,6 @@
 
    int const PSEUDOEOF = 256;
    int charCount;
-   string result;
    vector<string> encodings (257);
    /*
    *  count the number of characters in a text file
@@ -54,12 +54,26 @@
          {
             numOfAscii = numOfAscii + 1;
             charCount = numOfAscii;
-            result = result + (char)i + to_string(count[i])+ " ";
          }
        }
       // return the vector sorted by characters with their frequencies
       return count;
    }
+
+   int binaryToBase10(int n) {
+
+    int output = 0;
+
+    for(int i=0; n > 0; i++) {
+
+        if(n % 10 == 1) {
+            output += pow(2, i);
+        }
+        n /= 10;
+    }
+
+    return output;
+}
 
   /*
   * writeFile writes the encoding out to a new compressed file
@@ -75,7 +89,7 @@
          // write the number of characters
          output.writebits(32,charCount);
          // write the table of unique characters and their frequency
-         for(int i = 0; i < 257; i++)
+        for(int i = 0; i < 257; i++)
         {
           if(count[i]>0)
           {
@@ -94,7 +108,7 @@
             if(encodings[ch]!="")
             {              
               int bitSize = encodings[ch].length();
-              int outBits = stoi(encodings[ch]);            
+              int outBits = stoi(encodings[ch],nullptr,2);                   
               output.writebits(bitSize,outBits);
             }                      
          }     
