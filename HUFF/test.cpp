@@ -65,7 +65,7 @@
   * writeFile writes the encoding out to a new compressed file
   *  pass in a fileName to open & a name for a file to output to
   */
-  void writeFile(string fileName, string outFile)
+  void writeFile(string fileName, string outFile, vector<int> count)
    {
       //------- Read each character again --------         
          ifstream infile;
@@ -73,12 +73,15 @@
 
         
          // write the number of characters
-         output.writebits(8,charCount+'0');
+         output.writebits(32,charCount);
          // write the table of unique characters and their frequency
-         for(int i = 0; i < result.length(); i++)
+         for(int i = 0; i < 257; i++)
         {
-          // each character is 8 bits long
-          output.writebits(8,result[i]);
+          if(count[i]>0)
+          {
+            output.writebits(8,i);
+            output.writebits(32,count[i]);
+          }
         }
 
          infile.open(fileName.c_str());
@@ -95,9 +98,7 @@
               output.writebits(bitSize,outBits);
             }                      
          }     
-      /*
-      * READ: procede the final result with the final charCount
-      */     
+      // close the output file     
       output.close();
    }
 
@@ -164,7 +165,7 @@
      
 
       /** print to file the bits as a string **/
-      writeFile(argv[1], "compressed.txt");
+      writeFile(argv[1], "compressed.txt", freq);
 
       return 0;
    }

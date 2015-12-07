@@ -1,7 +1,6 @@
    #include <iostream>
    #include <string>
    #include <vector>
-   #include <map>
    #include <stdlib.h>
    #include "bitops.h"
    #include "HeapNode.h"
@@ -20,7 +19,7 @@
 
    int const PSEUDOEOF = 256;
 
-   string result;
+   
    /*
    * buildTree takes a heap of leafNodes and creates returns huffman tree
    * the huffMan tree is contained within a heapNode
@@ -72,36 +71,40 @@
       HeapNode insertVal; 
       int inbits;      
       int frequency;
-      char ch;
+      int ch;
+      vector<int> count;
        // set up the loop for n number of characters
       int loopTime;
-      infile.readbits(8,inbits);
-      // convert char(inbits) to int(loopTime)
-      loopTime = inbits - '0';
+      infile.readbits(32,inbits);
+      // looptime = int number inbits converts to
+      loopTime = inbits;
 
        // set up leaf values for huffman tree
       while(loopTime>0)
       {
         // get the unique characters        ch = infile.get();
-        infile.readbits(8,inbits);
-
-        ch = inbits;
+        infile.readbits(8,ch);
+        
         cout << "test: " << ch << endl;
         // frequency of that character
-        infile.readbits(8,inbits);
-        
-        frequency = inbits - '0';
+        infile.readbits(32,frequency);
         cout << frequency << endl;
-        // space after (char,freq) pair
-        infile.readbits(8,inbits);
-        // how often my character appears
-   //     infile >> frequency; 
-        // space after (char,freq) pair
-   //     infile.get(); 
-        // create leaf with the character and it's frequency as the values
+
         insertVal.buildLeaf(frequency, ch);
         myHeap.push(insertVal);
+        
+
+        /* create leaf with the character and it's frequency as the values
+        for(int i = 0; i < 257; i++)
+       {
+         if(count[i]>0)
+         {
+            insertVal.buildLeaf(count[i], i);
+            myHeap.push(insertVal);
+         }
+       }
         // 1 more character down, move on to the next (if any are left)
+       */
         loopTime--;
       }
       // insert leaf of PSEUDOEOF
