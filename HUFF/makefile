@@ -9,8 +9,8 @@ LIBS = -L/usr/local/lib
 
 CFLAGS  = -g
 
-Huff: test.o bitops.o HeapNode.o HuffmanNode.o 
-	$(CC) -o Huff $(INCLUDE) $(LIBS) $(CFLAGS) test.o bitops.o HeapNode.o HuffmanNode.o -lcurl
+unHuff: huff.o bitops.o HeapNode.o HuffmanNode.o 
+	$(CC) -o Huff $(INCLUDE) $(LIBS) $(CFLAGS) huff.o bitops.o HeapNode.o HuffmanNode.o -lcurl
 
 .cpp.o:	
 	$(CC) $(INCLUDE) $(CFLAGS) $(LIBS) -c $< -o $@

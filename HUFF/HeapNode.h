@@ -8,6 +8,7 @@
 #include <queue> 
 #include "HuffmanNode.h"
 
+using namespace std;
 
 class HeapNode
 {
