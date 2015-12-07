@@ -64,14 +64,12 @@
   *  pass in a fileName to open & a name for a file to output to
   */
   void writeFile(string fileName, string outFile, vector<int> count)
-   {
-      //------- Read each character again --------         
+   {        
          ifstream infile;
          obstream output(outFile);
 
         
-         // write the number of characters
-        
+         // write the number of characters        
          output.writebits(32,charCount+1);
          // write the table of unique characters and their frequency
         for(int i = 0; i < 256; i++)
@@ -84,7 +82,7 @@
         }
 
          infile.open(fileName.c_str());
-        // output.writebits(8, charCount);
+         //------- Read each character again -------- 
          /** while peeking ahead does not reveal end of file **/
          while(infile.peek() && !infile.eof())
          {
@@ -108,7 +106,9 @@
       // close the output file     
       output.close();
    }
-
+   /*
+   * takes 
+   */
    HeapNode buildTree(priority_queue<HeapNode> leafNodes)
    { 
 
@@ -138,6 +138,28 @@
       return myHeap.top();
    }
 
+   /*
+   * takes the frequency array and creates leafNodes of the pairs.
+   * after creating a leaf node, the node is pushed onto the heap
+   */
+   priority_queue<HeapNode> buildHeap(vector<int> freq)
+   {
+    priority_queue<HeapNode> myHeap;
+      HeapNode insertVal; 
+      // only insert ascii codes that actually appear
+      for(int i = 0; i < 256; i++)
+       {
+         if(freq[i]!=0)
+         {
+            insertVal.buildLeaf(freq[i], i);
+            myHeap.push(insertVal);
+         }
+       }
+      insertVal.buildLeaf(1, PSEUDOEOF);
+      myHeap.push(insertVal);
+      return myHeap;
+   }
+
    int main(int argc, char * argv[])
    {
       vector<int> freq;
@@ -151,20 +173,9 @@
          cerr << "usage: " << argv[0] << " <filename>" << endl;
          exit(1);
       }
-      
+      // build the heap of <char,freq> and create leafNodes of the values
       priority_queue<HeapNode> myHeap;
-      HeapNode insertVal; 
-      // only insert ascii codes that actually appear
-      for(int i = 0; i < 256; i++)
-       {
-         if(freq[i]!=0)
-         {
-            insertVal.buildLeaf(freq[i], i);
-            myHeap.push(insertVal);
-         }
-       }
-      insertVal.buildLeaf(1, PSEUDOEOF);
-      myHeap.push(insertVal);
+      myHeap = buildHeap(freq);
 
        //build the huffman tree with the leaf nodes contained in the heap
        HeapNode HuffmanTree = buildTree(myHeap);
