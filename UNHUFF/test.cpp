@@ -73,36 +73,25 @@
       infile.readbits(32,inbits);
       // looptime = int number inbits converts to
       loopTime = inbits;
-
        // set up leaf values for huffman tree
-      while(loopTime>0)
+      while(loopTime>1)
       {
         // get the unique characters        
         infile.readbits(8,ch);
         
-        cout << "char: " << (char)ch << endl;
+     
         // frequency of that character
         infile.readbits(32,frequency);
-        cout <<"freq: "<< frequency << endl;
+   
 
         insertVal.buildLeaf(frequency, ch);
         myHeap.push(insertVal);
         
-        /* create leaf with the character and it's frequency as the values
-        for(int i = 0; i < 257; i++)
-       {
-         if(count[i]>0)
-         {
-            insertVal.buildLeaf(count[i], i);
-            myHeap.push(insertVal);
-         }
-       }
         // 1 more character down, move on to the next (if any are left)
-       */
         loopTime--;
       }
        //insert leaf of PSEUDOEOF
-      insertVal.buildLeaf(1, PSEUDOEOF);
+      insertVal.buildLeaf(1,PSEUDOEOF);
       myHeap.push(insertVal);
       // create the huffman tree
       HeapNode HuffmanTree = buildTree(myHeap);
@@ -117,18 +106,18 @@
       bool traversing = true;
       while (infile.readbits(1,inbits)&&traversing) 
       {   
-
         // left on 0, right on 1
         cout << "bit read: " << inbits << endl;
-        // end of file
-        if(currentNode->Value()==PSEUDOEOF)
-        {
-          traversing = false;
-        }
         if(inbits==0)
         {
-          //cout << "I went left" << endl;
+          // set the value of currentNode = currentNode's left child
           currentNode = currentNode->left();
+          // check if the leaf is signifying the end of the file.
+          if(currentNode->Value()==PSEUDOEOF)
+          {
+            traversing = false;
+          }
+
           if(currentNode->Value()!=-1)
           {
             //cout <<  "I'm an ascii value!" << endl;
@@ -141,12 +130,15 @@
          }
         else
         {
-         // cout << "I went right" << endl;
+          // set the value of currentNode = currentNode's right child
           currentNode = currentNode->right();
+          // check if the leaf is signifying the end of the file.
+          if(currentNode->Value()==PSEUDOEOF)
+          {
+            traversing = false;
+          }
           if(currentNode->Value()!=-1)
           {
-           // cout <<  "I'm an ascii value!" << endl;
-            
             char temp = currentNode->Value();
             output.push_back(temp);
             cout << "char found at leaf: " << temp << endl;

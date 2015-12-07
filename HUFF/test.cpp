@@ -1,13 +1,11 @@
    #include <iostream>
-   #include <bitset>
    #include <string>
    #include <vector>
-   #include <map>
+
    #include <stdlib.h>
    #include "bitops.h"
    #include "HeapNode.h"
    #include "HuffmanNode.h"
-   #include <cmath>
 
 
 /*
@@ -60,20 +58,6 @@
       return count;
    }
 
-   int binaryToBase10(int n) {
-
-    int output = 0;
-
-    for(int i=0; n > 0; i++) {
-
-        if(n % 10 == 1) {
-            output += pow(2, i);
-        }
-        n /= 10;
-    }
-
-    return output;
-}
 
   /*
   * writeFile writes the encoding out to a new compressed file
@@ -90,7 +74,7 @@
         
          output.writebits(32,charCount+1);
          // write the table of unique characters and their frequency
-        for(int i = 0; i < 257; i++)
+        for(int i = 0; i < 256; i++)
         {
           if(count[i]>0)
           {
@@ -108,15 +92,19 @@
             char ch = infile.get();
             if(encodings[ch]!="")
             {              
-              int bitSize = encodings[ch].length();
-              int outBits = stoi(encodings[ch],nullptr,2);
-              cout << ch << "size: " << bitSize << " path as int: " << outBits << endl;                   
-              output.writebits(bitSize,outBits);
+              for (int i = 0; i < encodings[ch].size(); ++i)
+              {
+                int bitVal = int(encodings[ch][i]-'0');
+                output.writebits(1,bitVal);
+              }
             }                      
          }
-         int bitSize = encodings[PSEUDOEOF].length();
-        int outBits = stoi(encodings[PSEUDOEOF],nullptr,2);
-         output.writebits(bitSize,outBits);     
+         // write out PSUEDOEOF path
+      for (int i = 0; i < encodings[PSEUDOEOF].size(); ++i)
+              {
+                int bitVal = int(encodings[PSEUDOEOF][i]-'0');
+                output.writebits(1,bitVal);
+              }   
       // close the output file     
       output.close();
    }
@@ -167,7 +155,7 @@
       priority_queue<HeapNode> myHeap;
       HeapNode insertVal; 
       // only insert ascii codes that actually appear
-      for(int i = 0; i < 257; i++)
+      for(int i = 0; i < 256; i++)
        {
          if(freq[i]!=0)
          {
@@ -175,6 +163,9 @@
             myHeap.push(insertVal);
          }
        }
+      insertVal.buildLeaf(1, PSEUDOEOF);
+      myHeap.push(insertVal);
+
        //build the huffman tree with the leaf nodes contained in the heap
        HeapNode HuffmanTree = buildTree(myHeap);
       
