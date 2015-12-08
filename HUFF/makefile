@@ -9,7 +9,7 @@ LIBS = -L/usr/local/lib
 
 CFLAGS  = -g
 
-unHuff: huff.o bitops.o HeapNode.o HuffmanNode.o 
+huff: huff.o bitops.o HeapNode.o HuffmanNode.o 
 	$(CC) -o Huff $(INCLUDE) $(LIBS) $(CFLAGS) huff.o bitops.o HeapNode.o HuffmanNode.o -lcurl
 
 .cpp.o:	

@@ -20,6 +20,8 @@
 
    int const PSEUDOEOF = 256;
    int charCount;
+   int totalChars;
+   int totalOutBits;
    vector<string> encodings (257);
    /*
    *  count the number of characters in a text file
@@ -58,6 +60,28 @@
       return count;
    }
 
+   /*
+   *  function figures the size of the original file
+   *  also figures the size of the "compressed" file
+   */
+   void printStats(int insize, int outSize)
+   {
+      // compute number of bits in original file -- each char is 8 bits
+      totalChars = (totalChars - 1) * 8;
+
+      cout <<"------------------------------------" << endl;
+      cout <<"bits in original file: " << totalChars << endl;
+      cout << " " << endl;
+      cout <<"bits in compressed file: " << outSize << endl;
+      cout <<"------------------------------------" << endl;
+      cout <<"" << endl;
+      cout <<"------------------------------------" << endl;
+      cout <<"bytes in original file: " << totalChars/8 << endl;
+      cout << " " << endl;
+      cout <<"bytes in compressed file: " << outSize/8 << endl;
+      cout <<"------------------------------------" << endl;
+   }
+
 
   /*
   * writeFile writes the encoding out to a new compressed file
@@ -67,10 +91,11 @@
    {        
          ifstream infile;
          obstream output(outFile);
-
+         totalChars = 0;
         
          // write the number of characters        
          output.writebits(32,charCount+1);
+         totalOutBits = totalOutBits + 32;
          // write the table of unique characters and their frequency
         for(int i = 0; i < 256; i++)
         {
@@ -78,6 +103,7 @@
           {
             output.writebits(8,i);
             output.writebits(32,count[i]);
+            totalOutBits = totalOutBits + 40;
           }
         }
 
@@ -86,6 +112,7 @@
          /** while peeking ahead does not reveal end of file **/
          while(infile.peek() && !infile.eof())
          {
+            totalChars++;
             // get the encoding value for each character and add to the final output
             char ch = infile.get();
             if(encodings[ch]!="")
@@ -94,6 +121,7 @@
               {
                 int bitVal = int(encodings[ch][i]-'0');
                 output.writebits(1,bitVal);
+                totalOutBits = totalOutBits + 1;
               }
             }                      
          }
@@ -102,6 +130,7 @@
               {
                 int bitVal = int(encodings[PSEUDOEOF][i]-'0');
                 output.writebits(1,bitVal);
+                totalOutBits = totalOutBits + 1;
               }   
       // close the output file     
       output.close();
@@ -163,6 +192,7 @@
    int main(int argc, char * argv[])
    {
       vector<int> freq;
+      
 
       if (argc > 1)
       {
@@ -180,13 +210,13 @@
        //build the huffman tree with the leaf nodes contained in the heap
        HeapNode HuffmanTree = buildTree(myHeap);
       
-       // create encodings for each character 
-       
+       // create encodings for each character     
       HuffmanTree.value()->traverseTree(HuffmanTree.value(), "", encodings);
      
 
       /** print to file the bits as a string **/
       writeFile(argv[1], "compressed.txt", freq);
+      printStats(totalChars, totalOutBits);
 
       return 0;
    }
